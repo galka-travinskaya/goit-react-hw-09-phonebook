@@ -1,0 +1,13 @@
+.menu {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    margin-right: 5px;
+}
+
+.name {
+    font-weight: 600;
+    margin-right: 10px;
+}

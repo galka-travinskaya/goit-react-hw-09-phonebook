@@ -1,0 +1,21 @@
+.enter {
+  opacity: 1;
+}
+
+.exit {
+  opacity: 0;
+}
+
+.section {
+  text-align: center;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.text {
+  margin-top: 25px;
+}

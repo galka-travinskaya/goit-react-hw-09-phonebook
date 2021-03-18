@@ -1,0 +1,21 @@
+.container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid blue;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.link {
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
+}
+
+.link_active {
+  color: blue;
+}
