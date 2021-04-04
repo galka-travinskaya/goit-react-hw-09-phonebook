@@ -1,7 +1,16 @@
 import React, { useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { CSSTransition } from 'react-transition-group';
+
 import { logIn } from '../../redux/auth';
+import Alert from '../../components/Alert';
+import {
+  notificationAction,
+  notificationSelectors,
+} from '../../redux/notification';
+
 import s from './LoginVeiw.module.css';
+import alert from '../../transition/Transition.module.css';
 import Button from '@material-ui/core/Button';
 
 export default function LoginView() {
@@ -21,7 +30,7 @@ export default function LoginView() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-
+      
       dispatch(logIn({ email, password }));
       setEmail('');
       setPassword('');
@@ -29,8 +38,20 @@ export default function LoginView() {
     [dispatch, email, password],
   );
 
+  const notification = useSelector(notificationSelectors.getError);
+
   return (
     <div className={s.content}>
+      <CSSTransition
+        in={notification.error}
+        timeout={250}
+        classNames={alert}
+        unmountOnExit
+      >
+        <Alert>
+          <p>{notification.message}</p>
+        </Alert>
+      </CSSTransition>
       <h1 className={s.title}>Войдите в аккаунт</h1>
 
       <form onSubmit={handleSubmit} autoComplete="off" className={s.form}>

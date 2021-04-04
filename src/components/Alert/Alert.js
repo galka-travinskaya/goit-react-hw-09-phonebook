@@ -4,9 +4,9 @@ import s from './Alert.module.css';
 
 const alertRoot = document.querySelector('#popap-root');
 
-export default function Alert() {
+export default function Alert({children}) {
   return createPortal(
-    <div className={s.popup}>{this.props.children} </div>,
+    <div className={s.popup}>{children} </div>,
     alertRoot,
   );
 }

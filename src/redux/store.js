@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { contactsReducer } from './contacts';
 import { authReducer } from './auth';
+import {notificationReducer} from './notification';
 
 const authPersistConfig = {
   key: 'token',
@@ -23,6 +24,7 @@ const store = configureStore({
   reducer: {
     auth: persistReducer(authPersistConfig, authReducer),
     contacts: contactsReducer,
+    notification: notificationReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: {

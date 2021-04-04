@@ -1,6 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { CSSTransition } from 'react-transition-group';
+
 import { register } from '../../redux/auth';
+import Alert from '../../components/Alert';
+import {
+  notificationAction,
+  notificationSelectors,
+} from '../../redux/notification';
+import alert from '../../transition/Transition.module.css';
 import s from './Register.module.css';
 import Button from '@material-ui/core/Button';
 
@@ -31,12 +39,46 @@ export default function RegisterView() {
       setName('');
       setEmail('');
       setPassword('');
+      error();
     },
     [dispatch, name, email, password],
   );
 
+  const notification = useSelector(notificationSelectors.getError);
+
+  const error = () => {
+    if (email === '' || password === '' || name === '') {
+      dispatch(
+        notificationAction.showNotification({
+          message: 'Some field is empty',
+          error: true,
+        }),
+      );
+    }
+
+    setTimeout(() => {
+      dispatch(
+        notificationAction.showNotification({
+          message: '',
+          error: false,
+        }),
+      );
+    }, 2000);
+    return ;
+  };
+
   return (
     <div className={s.content}>
+      <CSSTransition
+        in={notification.error}
+        timeout={250}
+        classNames={alert}
+        unmountOnExit
+      >
+        <Alert>
+          <p>{notification.message}</p>
+        </Alert>
+      </CSSTransition>
       <h1 className={s.title}>Регистрация</h1>
 
       <form onSubmit={handleSubmit} autoComplete="off" className={s.form}>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import authActions from './auth-actions';
+import { notificationAction } from '../notification';
 import { contactsOperations } from '../contacts';
 
 axios.defaults.baseURL = 'https://goit-phonebook-api.herokuapp.com';
@@ -48,7 +49,22 @@ export const logIn = credentials => async dispatch => {
     token.set(response.data.token);
     dispatch(authActions.loginSuccess(response.data));
   } catch (error) {
-    dispatch(authActions.loginError(error.message));
+    // dispatch(authActions.loginError(error.message));
+    dispatch(
+      notificationAction.showNotification({
+        message: 'Please, enter correctly email or password',
+        error: true,
+      }),
+    );
+
+    setTimeout(() => {
+      dispatch(
+        notificationAction.showNotification({
+          message: '',
+          error: false,
+        }),
+      );
+    }, 2000);
   }
 };
 

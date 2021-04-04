@@ -3,6 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 
 import contactsOperations from '../../redux/contacts/contacts-operations';
+import {
+  notificationAction,
+  notificationSelectors,
+} from '../../redux/notification';
 import { getContacts } from '../../redux/contacts/contacts-selectors';
 import Alert from '../Alert';
 
@@ -23,29 +27,46 @@ export default function ContactForm() {
     setNumber(e.currentTarget.value);
   };
 
-  const [showAlert, setShowAlert] = useState(false);
+  // const [showAlert, setShowAlert] = useState(false);
 
-  const toggleAlert = message => {
-    setShowAlert(true);
-    setErrorMessage(message);
-    setTimeout(() => setShowAlert(false), 1000);
-  };
+  // const toggleAlert = message => {
+  //   setShowAlert(true);
+  //   setErrorMessage(message);
+  //   setTimeout(() => setShowAlert(false), 1000);
+  // };
 
   const reset = () => {
     setName('');
     setNumber('');
   };
 
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [errorMessage, setErrorMessage] = useState('');
 
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
+  const notification = useSelector(notificationSelectors.getError);
 
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
+
+      setTimeout(() => {
+        dispatch(
+          notificationAction.showNotification({
+            message: '',
+            error: false,
+          }),
+        );
+      }, 2000);
+      
       if (!name || !number) {
-        toggleAlert('The list is empty');
+        // toggleAlert('The list is empty');
+        dispatch(
+          notificationAction.showNotification({
+            message: 'The list is empty',
+            error: true,
+          }),
+        );
         return;
       }
 
@@ -54,10 +75,25 @@ export default function ContactForm() {
           contact => contact.name.toLowerCase() === name.toLowerCase(),
         )
       ) {
-        toggleAlert('Contact is already exist');
+        dispatch(
+          notificationAction.showNotification({
+            message: 'Contact is already exist',
+            error: true,
+          }),
+        );
+        // toggleAlert('Contact is already exist');
         reset();
         return;
       }
+
+      // setTimeout(() => {
+      //   dispatch(
+      //     notificationAction.showNotification({
+      //       message: '',
+      //       error: false,
+      //     }),
+      //   );
+      // }, 2000);
 
       dispatch(contactsOperations.addContact(name, number));
       reset();
@@ -68,13 +104,13 @@ export default function ContactForm() {
   return (
     <form className={s.form} onSubmit={handleSubmit}>
       <CSSTransition
-        in={showAlert}
+        in={notification.error}
         timeout={250}
         classNames={alert}
         unmountOnExit
       >
         <Alert>
-          <p>{errorMessage}</p>
+          <p>{notification.message}</p>
         </Alert>
       </CSSTransition>
       <label className={s.label}>
